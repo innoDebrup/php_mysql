@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['flag'])) {
-  header('url: ../Relogin.php');
+  header('url: ../Login/Relogin.php');
 }
 require "upload.php";
 require "phoneNumber.php";
@@ -27,7 +27,7 @@ if (!($uploadOk === 0 || $marksError === 1 || $phoneError === 1 || $emailError =
   <!-- If any error occurs then show this div. -->
   <div class="<?php echo ($uploadOk === 0 || $marksError === 1 || $phoneError === 1 || $emailError === 1) ? "error" : "hide"; ?>">
     <div class="header-link">
-      <a href="../logout.php">Logout</a>
+      <a href="../Login/logout.php">Logout</a>
     </div>
     <span>ERROR!</span>
     <p>

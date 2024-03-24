@@ -1,13 +1,8 @@
 <?php
-
+require_once 'vendor/autoload.php';
+require_once 'LoadEnv.php';
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-use Dotenv\Dotenv;
 
-require 'vendor/autoload.php';
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 class SendMail {
   private $content;
   /**
@@ -25,6 +20,7 @@ class SendMail {
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = TRUE;
     // Accessing key values from .env file.
+    LoadEnv::loadDotEnv();
     $mail->Username = $_ENV['USER_NAME'];
     $mail->Password = $_ENV['PASSWORD'];
     // SMTP port.

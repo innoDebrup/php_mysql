@@ -1,26 +1,33 @@
 <?php
-require_once 'Query.php';
-require_once 'Validate.php';
+require_once '../Database/Query.php';
+require_once '../Validate.php';
 
 $query = new Query();
 $validator = new Validate();
 $not_duplicate = TRUE;
 $valid_email = TRUE;
 $valid_password = TRUE;
-
+$valid_input = TRUE;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  
   $user_name = htmlspecialchars($_POST['user_name']);
   $email = htmlspecialchars($_POST['email']);
   $password = htmlspecialchars($_POST['password']);
-  $not_duplicate = $query->checkUser($user_name, $email);
-  $valid_email = $validator->validEmail($email);
-  $valid_password = $validator->validPassword($password);
+  if (!empty($user_name) && !empty($email) && !empty($password)) {
+    $not_duplicate = $query->checkUser($user_name, $email);
+    $valid_email = $validator->validEmail($email);
+    $valid_password = $validator->validPassword($password);
 
-  if ($not_duplicate && $valid_email && $valid_password) {
-    $query->addUser($user_name, $email, $password);
-    header('Location: index.php?message=' . urlencode('ACCOUNT CREATED SUCCESSFULLY. PLEASE LOGIN !!'));
-    exit;
+    if ($not_duplicate && $valid_email && $valid_password) {
+      $query->addUser($user_name, $email, $password);
+      header('Location: index.php?message=' . urlencode('ACCOUNT CREATED SUCCESSFULLY. PLEASE LOGIN !!'));
+      exit;
+    }
   }
+  else {
+    $valid_input = FALSE;
+  }
+  
 }
 
 ?>
@@ -30,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./CSS/style.css">
+  <link rel="stylesheet" href="../CSS/style.css">
   <title>Sign Up</title>
 </head>
 
@@ -73,6 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php if (!$valid_password) : ?>
       <div class="center">
         <h2><?php echo $validator->getPasswordErr(); ?></h2>
+      </div>
+    <?php endif; ?>
+    <?php if (!$valid_input) : ?>
+      <div class="center">
+        <h2>Please fill all fields.</h2>
       </div>
     <?php endif; ?>
   </div>

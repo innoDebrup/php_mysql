@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['flag'])) {
-  header('Location: ../Relogin.php');
+  header('Location: ../Login/Relogin.php');
   exit;
 }
 ?>
@@ -19,7 +19,7 @@ if (!isset($_SESSION['flag'])) {
 
 <body>
   <div class="header-link">
-    <a href="../logout.php">Logout</a>
+    <a href="../Login/logout.php">Logout</a>
   </div>
   <!-- Main Form. -->
   <div class="form">

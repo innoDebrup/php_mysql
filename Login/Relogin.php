@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(isset($_SESSION['flag'])){
-  header('Location: Form/pager.php');
+  header('Location: ../Form/pager.php');
   exit;
 }
 ?>
@@ -10,7 +10,7 @@ if(isset($_SESSION['flag'])){
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="../CSS/style.css">
   <title>Please Login</title>
 </head>
 <body>

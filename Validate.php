@@ -1,21 +1,18 @@
 <?php
+require_once 'vendor/autoload.php';
+require_once 'LoadEnv.php';
 use GuzzleHttp\Client;
-use Dotenv\Dotenv;
-require 'vendor/autoload.php';
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 
 class Validate {
   private $emailError = '';
   private $passwordError = '';
 
   public function validEmail($email) {
-    // Regular Expression to check if the email is in a valid format or not. 
-    $regularExp = '/^[\w._]+@[\w]+(\.[a-z]{2,}){0,2}$/i';
-    if (!preg_match($regularExp, $email)) {
+    if (!filter_var($email,FILTER_VALIDATE_EMAIL)) {
       $this->emailError = 'Invalid Email address format!';
       return FALSE;
     }
+    LoadEnv::loadDotEnv();
     // $client = new Client();
     // $access_key = $_ENV['ACCESS_KEY'];
     // $response = $client->request('GET', 'https://emailvalidation.abstractapi.com/v1/?api_key=' . $access_key . '&email=' . $email);
@@ -46,10 +43,11 @@ class Validate {
       return TRUE;
     }
   }
-  public function getEmailErr(){
+
+  public function getEmailErr() {
     return $this->emailError;
   }
-  public function getPasswordErr(){
+  public function getPasswordErr() {
     return $this->passwordError;
   }
 }
