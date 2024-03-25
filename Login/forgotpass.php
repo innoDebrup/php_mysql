@@ -14,7 +14,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $token_arr = $query->getToken($email);
     $reset_link = 'http://mysql/Login/resetpass.php?token='.$token_arr['reset_token'];
     $send_mail->setContent($reset_link);
-    $send_mail->sendMail($email);
+    $send_mail->sendResetMail($email);
     $sent = 1;
   }
 }

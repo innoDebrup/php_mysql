@@ -44,6 +44,11 @@ class Validate {
     }
   }
 
+  public function genOTP() {
+    $otp = rand(1000, 9999);
+    return $otp;
+  }
+
   public function getEmailErr() {
     return $this->emailError;
   }

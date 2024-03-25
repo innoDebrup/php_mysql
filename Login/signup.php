@@ -1,15 +1,17 @@
 <?php
 require_once '../Database/Query.php';
 require_once '../Validate.php';
-
+require_once '../SendMail.php';
+require_once './OTP.php';
+session_start();
 $query = new Query();
 $validator = new Validate();
+$mail = new SendMail();
 $not_duplicate = TRUE;
 $valid_email = TRUE;
 $valid_password = TRUE;
 $valid_input = TRUE;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  
   $user_name = htmlspecialchars($_POST['user_name']);
   $email = htmlspecialchars($_POST['email']);
   $password = htmlspecialchars($_POST['password']);
@@ -19,8 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $valid_password = $validator->validPassword($password);
 
     if ($not_duplicate && $valid_email && $valid_password) {
-      $query->addUser($user_name, $email, $password);
-      header('Location: index.php?message=' . urlencode('ACCOUNT CREATED SUCCESSFULLY. PLEASE LOGIN !!'));
+      //Generate OTP
+      $otp = OTP::processOTP($email);
+      //Prepare data to be stored.
+      $_SESSION['username'] = $user_name;
+      $_SESSION['password'] = $password;
+      $_SESSION['email'] = $email;
+      $_SESSION['otp'] = $otp;
+      
+      header('Location: otpcheck.php');
       exit;
     }
   }
