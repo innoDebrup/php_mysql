@@ -8,7 +8,7 @@ $sent = 0;
 if($_SERVER['REQUEST_METHOD']=='POST'){
   $email = htmlspecialchars($_POST['email']);
   $email_present = $query->checkEmail($email);
-  
+  // Send Reset Link to the email only if it is registered.
   if ($email_present) {
     $query->addToken($email);
     $token_arr = $query->getToken($email);

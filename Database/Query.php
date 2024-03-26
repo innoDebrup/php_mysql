@@ -1,8 +1,23 @@
 <?php
 require 'ConnectDB.php';
 
+/**
+ * Class to run SQL Queries.
+ */
 class Query extends ConnectDB {
-
+  
+  /**
+   * Function to add new users to the table.
+   *
+   * @param string $user_name
+   *  User name for the new account.
+   * @param string $email
+   *  Email for the new account.
+   * @param string $password
+   *  Password set for the new account.
+   * 
+   * @return void
+   */
   public function addUser(string $user_name, string $email, string $password) {
     $conn = $this->getConn();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -14,6 +29,14 @@ class Query extends ConnectDB {
     ]);
   }
 
+  /**
+   * Function to add Token for Resetting password.
+   *
+   * @param string $email
+   *  Email of the account whose Password is to be reset and Token generated.
+   * 
+   * @return void
+   */
   public function addToken(string $email) {
     $conn = $this->getConn();
     $token = bin2hex(random_bytes(16));
@@ -27,6 +50,16 @@ class Query extends ConnectDB {
     ]);
   }
 
+  /**
+   * Function to reset password.
+   *
+   * @param integer $user_id
+   *  User-id of the account whose password is to be reset.
+   * @param string $password
+   *  New Password for the account.
+   * 
+   * @return void
+   */
   public function resetPass(int $user_id, string $password) {
     $conn = $this->getConn();
     $stmt = $conn->prepare("UPDATE Users SET password = :password, reset_token = NULL, token_timer = NULL WHERE user_id = :user_id;");
@@ -35,6 +68,16 @@ class Query extends ConnectDB {
       'user_id' => $user_id
     ]);
   }
+
+  /**
+   * Function to get the Token of an account.
+   *
+   * @param string $email
+   *  Email of the account from which the token is to be read.
+   * 
+   * @return mixed
+   *  An array containing the reset_token and the token_timer.
+   */
   public function getToken(string $email) {
     $conn = $this->getConn();
     $stmt = $conn->prepare("SELECT reset_token, token_timer FROM Users WHERE email=:email;");
@@ -45,6 +88,15 @@ class Query extends ConnectDB {
     return $result_array;
   }
 
+  /**
+   * Function to check if the Token is present in the table.
+   *
+   * @param string $token
+   *  Entered token which needs verification.
+   * 
+   * @return mixed
+   *  An array containing the user_id and the token-timer.
+   */
   public function checkToken(string $token) {
     $conn = $this->getConn();
     $stmt = $conn->prepare("SELECT user_id, token_timer FROM Users WHERE reset_token = :token;");
@@ -55,6 +107,17 @@ class Query extends ConnectDB {
     return $result_array;
   }
 
+  /**
+   * Function to check if the user exists or not.
+   *
+   * @param string $user_name
+   *  Username to be searched for.
+   * @param string $email
+   *  Email to be searched for.
+   * 
+   * @return bool
+   *  Returns FALSE if User/Email is present or TRUE if none are present.  
+   */
   public function checkUser(string $user_name, string $email) {
     $conn = $this->getConn();
     $stmt = $conn->prepare("SELECT * FROM Users WHERE user_name = :username OR email = :email;");
@@ -71,6 +134,15 @@ class Query extends ConnectDB {
     }
   }
 
+  /**
+   * Function to check if Email is present in the table or not.
+   *
+   * @param string $email
+   *  Email which is to be searched for.
+   * 
+   * @return bool
+   *  Returns TRUE if Email is present or FALSE if Email is not present.
+   */
   public function checkEmail(string $email){
     $conn = $this->getConn();
     $stmt = $conn->prepare("SELECT * FROM Users WHERE email = :email ;");
@@ -86,6 +158,15 @@ class Query extends ConnectDB {
     }
   }
 
+  /**
+   * Function to get the password of a given account.
+   *
+   * @param string $user_mail
+   *  Email of the account whose password needs to be fetched.
+   * 
+   * @return string
+   *  Returns the password(hash) in string format.
+   */
   public function getPass(string $user_mail) {
     $conn = $this->getConn();
     $stmt = $conn->prepare("SELECT * FROM Users WHERE user_name = :user_mail OR email = :user_mail;");
@@ -96,11 +177,4 @@ class Query extends ConnectDB {
     $password = $result['password'];
     return $password;
   }
-
-  public function genOTP(string $email) {
-    $conn = $this->getConn();
-    $otp = rand(1000,9999);
-    $sql = "";
-  }
-
 }

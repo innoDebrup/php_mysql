@@ -3,6 +3,7 @@
   session_start();
   $query = new Query();
   $invalid = 0;
+  // If session is present then Redirect to landing page.
   if (isset($_SESSION['flag'])) {
     header('Location: ../Form/pager.php');
     exit;
@@ -11,11 +12,14 @@
     $user_mail = htmlspecialchars($_POST['user_mail']);
     $password = htmlspecialchars($_POST['password']);
     $hash = $query->getPass($user_mail);
+    // Check if account is present or not.
     if (!$hash){
+      // Destroy session if it does not exist.
       $invalid = 1;
       session_destroy();
     }
     else{
+      // Check if the password matches or not.
       if(password_verify($password, $hash)){
         $_SESSION['flag'] = 1;
         header('Location: ../Form/pager.php');

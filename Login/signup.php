@@ -4,6 +4,11 @@ require_once '../Validate.php';
 require_once '../SendMail.php';
 require_once './OTP.php';
 session_start();
+if (isset($_SESSION['otp'])) {
+  session_unset();
+  session_destroy();
+  session_start();
+}
 $query = new Query();
 $validator = new Validate();
 $mail = new SendMail();
