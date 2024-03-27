@@ -42,11 +42,6 @@
 </head>
 <body>
   <div class="container">
-    <?php if (isset($_GET['message'])): ?>
-      <div class="center">
-        <h2><?php echo $_GET['message']; ?></h2>
-      </div>  
-    <?php endif; ?>
     <div>
       <div class="main-head">
         <h1>
